@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ t.title }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #e0f2f7 0%, #d1e8ef 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Language Toggle Buttons */
+        .lang-toggle-container {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            padding: 10px 20px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 20px;
+        }
+        .lang-toggle-btn {
+            padding: 8px 18px;
+            border-radius: 8px;
+            border: none;
+            background: #2e7d32;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .lang-toggle-btn:hover {
+            background-color: #388e3c;
+            transform: translateY(-2px);
+        }
+        .lang-toggle-btn.active {
+            background-color: #1b5e20;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Main Container */
+        .container {
+            background: #fff;
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 750px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Titles and Headings */
+        h1 {
+            font-family: 'Playfair Display', serif;
+            color: #1b5e20;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background-color: #a5d6a7;
+            border-radius: 2px;
+        }
+        h2 {
+            font-family: 'Poppins', sans-serif;
+            color: #444;
+            font-size: 1.5em;
+            margin-top: 30px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        /* Recommended Crops Section */
+        .result-card {
+            background: linear-gradient(45deg, #e8f5e9 0%, #c8e6c9 100%);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            transition: transform 0.3s ease;
+        }
+        .result-card:hover {
+            transform: translateY(-5px);
+        }
+        .result-card h3 {
+            font-size: 1.2em;
+            color: #2e7d32;
+            margin-top: 0;
+        }
+        .crop-list {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            list-style: none;
+            padding: 0;
+            margin-top: 15px;
+        }
+        .crop-list li {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #1b5e20;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Table Styles */
+        table {
+            margin: 20px auto;
+            border-collapse: collapse;
+            width: 90%;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        th, td {
+            border: none;
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        th {
+            background-color: #2e7d32;
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        td {
+            background-color: #ffffff;
+        }
+        tr:hover td {
+            background-color: #f0f0f0;
+            transition: background-color 0.3s ease;
+        }
+        td:first-child {
+            font-weight: 500;
+            color: #555;
+        }
+
+        /* Back Button */
+        .back-button {
+            display: inline-block;
+            margin-top: 30px;
+            text-decoration: none;
+            color: white;
+            background-color: #4CAF50;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .back-button:hover {
+            background-color: #388e3c;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="lang-toggle-container">
+        <form method="get">
+            <input type="hidden" name="lang" value="en">
+            <button type="submit" class="lang-toggle-btn{% if lang == 'en' %} active{% endif %}">English</button>
+        </form>
+        <form method="get">
+            <input type="hidden" name="lang" value="hi">
+            <button type="submit" class="lang-toggle-btn{% if lang == 'hi' %} active{% endif %}">हिन्दी</button>
+        </form>
+    </div>
+    
+    <div class="container">
+        <h1><i class="fas fa-seedling" style="color:#2e7d32;"></i> {{ t.recommended }}</h1>
+        
+        <div class="result-card">
+            <h3>{{ t.top2 }}</h3>
+            <ul class="crop-list">
+                {% for crop in crops %}
+                <li>{{ crop }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <h2><i class="fas fa-database" style="color:#42a5f5;"></i> {{ t.input_values }}</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>{{ t.parameter }}</th>
+                    <th>{{ t.value }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for key, value in inputs.items() %}
+                <tr>
+                    <td>{{ key }}</td>
+                    <td>{{ value }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="/?lang={{ lang }}" class="back-button"><i class="fas fa-arrow-left"></i> {{ t.back }}</a>
+    </div>
+</body>
+</html>

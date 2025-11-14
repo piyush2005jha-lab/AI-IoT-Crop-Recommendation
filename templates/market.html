@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Market Insights</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #e0f2f7 0%, #d1e8ef 100%);
+            color: #333;
+            overflow-x: hidden;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border-radius: 20px;
+            margin: 30px auto;
+            max-width: 1400px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 320px;
+            background: linear-gradient(180deg, #2e7d32 0%, #1b5e20 100%);
+            color: #e8f5e9;
+            padding: 40px 30px;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.2);
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .sidebar-header {
+            margin-bottom: 40px;
+        }
+
+        .sidebar-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5em;
+            font-weight: 700;
+            margin: 0 0 10px 0;
+            color: #fff;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+        }
+
+        .sidebar-header p {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin: 0;
+        }
+
+        .sidebar-controls h2 {
+            font-size: 1.3em;
+            color: #e8f5e9;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .sidebar-controls h2::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 3px;
+            background-color: #a5d6a7;
+            border-radius: 2px;
+        }
+
+        .crop-selection-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+        
+        .crop-tag-label {
+            display: block;
+            background-color: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            padding: 10px 18px;
+            color: #fff;
+            font-size: 0.9em;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .crop-tag-label::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: all 0.5s ease;
+        }
+
+        .crop-tag-label:hover::before {
+            left: 100%;
+        }
+
+        .crop-tag-label input[type="checkbox"] {
+            display: none;
+        }
+
+        .crop-tag-label input[type="checkbox"]:checked + span {
+            background-color: rgba(255, 255, 255, 0.3);
+            border-color: #e8f5e9;
+            color: #e8f5e9;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transform: scale(1.05);
+        }
+        
+        .crop-tag-label span {
+            display: block;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .crop-tag-label input[type="checkbox"]:checked + span::before {
+            content: "\f058";
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            margin-right: 8px;
+            color: #a5d6a7;
+        }
+
+        .action-button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(90deg, #66bb6a 0%, #43a047 100%);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .action-button:hover {
+            background: linear-gradient(90deg, #43a047 0%, #388e3c 100%);
+            transform: translateY(-3px) scale(1.01);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .content-area {
+            flex-grow: 1;
+            padding: 50px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+        }
+        
+        .section-card {
+            background: #ffffff;
+            padding: 35px;
+            border-radius: 18px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border: 1px solid #e0e0e0;
+            position: relative;
+            overflow: hidden;
+            animation: slideIn 0.8s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .section-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            border-width: 0 40px 40px 0;
+            border-style: solid;
+            border-color: #f0f2f5 #f0f2f5 #fff #fff;
+            transition: all 0.3s ease;
+        }
+
+        .section-card:hover {
+            transform: translateY(-8px) scale(1.005);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+        .section-card:hover::before {
+            border-color: #e0f2f7 #e0f2f7 #fff #fff;
+        }
+
+        .section-card h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8em;
+            color: #2c3e50;
+            margin: 0 0 20px 0;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            font-weight: 700;
+        }
+
+        .section-card h2 i {
+            margin-right: 15px;
+            color: #42a5f5;
+            font-size: 1.2em;
+        }
+        
+        .chart-img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .profit-callout {
+            grid-column: 1 / -1;
+            text-align: center;
+            background: linear-gradient(45deg, #a5d6a7 0%, #66bb6a 100%);
+            color: #fff;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            margin-top: 20px;
+            position: relative;
+            overflow: hidden;
+            animation: slideIn 1s ease-out;
+        }
+
+        .profit-callout::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cGF0aCBkPSJNMCAxMCBMIDEwIDAgTCA0MCAzMCBMIDMwIDQwIEwgMCAxMCIgZmlsbD0iI0YzRjNGMyIgZmlsbC1vcGFjaXR5PSIwLjEiLz4KPC9zdmc+') repeat;
+            opacity: 0.2;
+            pointer-events: none;
+        }
+
+        .profit-callout h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2em;
+            color: #fff;
+            margin-bottom: 15px;
+            text-shadow: 1px 1px 4px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        .profit-callout .profit {
+            font-size: 4.5em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: block;
+            text-shadow: 2px 2px 6px rgba(0,0,0,0.4);
+            position: relative;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .dashboard-container {
+                flex-direction: column;
+                margin: 20px;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: static;
+                padding-bottom: 20px;
+            }
+            .content-area {
+                grid-template-columns: 1fr;
+                padding: 30px;
+            }
+            .profit-callout {
+                padding: 40px 30px;
+            }
+            .sidebar-header h1 {
+                font-size: 2em;
+            }
+            .section-card h2 {
+                font-size: 1.5em;
+            }
+            .profit-callout .profit {
+                font-size: 3.5em;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .sidebar {
+                padding: 20px 15px;
+            }
+            .sidebar-header h1 {
+                font-size: 1.8em;
+            }
+            .sidebar-controls h2 {
+                font-size: 1.1em;
+            }
+            .content-area {
+                padding: 20px;
+                gap: 25px;
+            }
+            .section-card {
+                padding: 25px;
+            }
+            .section-card h2 {
+                font-size: 1.3em;
+            }
+            .profit-callout .profit {
+                font-size: 2.5em;
+            }
+            .crop-selection-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-container">
+    <div class="sidebar">
+        <div>
+            <div class="sidebar-header">
+                <h1>Crop Insights</h1>
+                <p>Track market trends and profitability.</p>
+            </div>
+            
+            <div class="sidebar-controls">
+                <h2><i class="fas fa-seedling"></i> Select Crops</h2>
+                <form method="POST">
+                    <div class="crop-selection-grid">
+                        {% for crop in crops_list %}
+                        <label class="crop-tag-label">
+                            <input type="checkbox" name="crops" value="{{ crop }}" {% if crop in selected_crops %}checked{% endif %}>
+                            <span>{{ crop }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                    <button type="submit" class="action-button">Visualize Trends <i class="fas fa-chart-area"></i></button>
+                </form>
+            </div>
+        </div>
+        <div class="sidebar-footer">
+            <p style="font-size:0.8em; opacity:0.7; text-align:center;">&copy; 2023 Market Trends</p>
+        </div>
+    </div>
+
+    <div class="content-area">
+        {% if price_chart %}
+        <div class="section-card">
+            <h2><i class="fas fa-tags"></i> Price Trend</h2>
+            <img class="chart-img" src="data:image/png;base64,{{ price_chart }}" alt="Price Trend">
+        </div>
+
+        <div class="section-card">
+            <h2><i class="fas fa-chart-bar"></i> Demand Trend</h2>
+            <img class="chart-img" src="data:image/png;base64,{{ demand_chart }}" alt="Demand Trend">
+        </div>
+        
+        <div class="profit-callout">
+            <h3>Discover Your Top Performer:</h3>
+            <span class="profit">{{ profit_crop }}</span>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+</body>
+</html>

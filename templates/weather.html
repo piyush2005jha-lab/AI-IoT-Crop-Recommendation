@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Weather Forecast - {{ data.district }}</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+    body { 
+        font-family: 'Roboto', sans-serif; 
+        background: linear-gradient(135deg, #e0f2f7 0%, #d1e8ef 100%); 
+        margin: 0; 
+        padding: 40px; 
+        color: #333; 
+    }
+    .container {
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+        padding: 40px;
+        max-width: 1200px;
+        margin: auto;
+        animation: fadeIn 1s ease-out;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 20px;
+        padding: 10px 20px;
+        background: #2e7d32;
+        color: #fff;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    .back-btn:hover { 
+        background: #1b5e20; 
+        transform: translateY(-2px);
+    }
+    h1 { 
+        font-family: 'Montserrat', sans-serif;
+        color: #1b5e20; 
+        margin-bottom: 30px; 
+        text-align: center;
+        position: relative;
+    }
+    h1::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 4px;
+        background: #a5d6a7;
+        border-radius: 2px;
+    }
+    h2 {
+        font-family: 'Montserrat', sans-serif;
+        color: #444;
+        font-size: 1.5em;
+        margin-top: 40px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    table { 
+        width: 100%; 
+        border-collapse: separate; 
+        border-spacing: 0 10px; 
+        margin-top: 20px; 
+    }
+    th, td { 
+        padding: 12px 15px; 
+        text-align: center; 
+        font-size: 14px; 
+    }
+    th { 
+        background-color: #e8f5e9; 
+        color: #1b5e20;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+    th:first-child { border-top-left-radius: 8px; border-bottom-left-radius: 8px; }
+    th:last-child { border-top-right-radius: 8px; border-bottom-right-radius: 8px; }
+    td {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    tr:hover td { 
+        background-color: #f0f0f0; 
+        transition: background-color 0.3s ease;
+    }
+    .safety-safe { color: #4CAF50; font-weight: bold; }
+    .safety-caution { color: #ff9800; font-weight: bold; }
+    .safety-not-safe { color: #f44336; font-weight: bold; }
+    .advice { 
+        font-size: 13px; 
+        color: #555; 
+        text-align: left; 
+        line-height: 1.4;
+    }
+    .hourly-alerts-card {
+        background: #fff3e0;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        margin-top: 30px;
+    }
+    .alert-list {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+    .alert-item {
+        font-size: 1em;
+        padding: 8px 0;
+        border-bottom: 1px solid #ffcc80;
+        color: #d84315;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .alert-item:last-child { border-bottom: none; }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <a href="/" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+    <h1>Weather Forecast for {{ data.district }}</h1>
+
+    <table>
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th><i class="fas fa-thermometer-half"></i> Temp°C</th>
+            <th><i class="fas fa-cloud-rain"></i> Rain(mm)</th>
+            <th><i class="fas fa-wind"></i> Wind(m/s)</th>
+            <th><i class="fas fa-sun"></i> SunHrs</th>
+            <th><i class="fas fa-cloud"></i> Cloud%</th>
+            <th><i class="fas fa-shield-alt"></i> Safety</th>
+            <th><i class="fas fa-exclamation-triangle"></i> Risks</th>
+            <th><i class="fas fa-lightbulb"></i> Advice</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for d in data.daily_summary %}
+        <tr>
+            <td>{{ d.date }}</td>
+            <td>{{ d.temp }}</td>
+            <td>{{ d.rain|round(2) }}</td>
+            <td>{{ d.wind|round(2) }}</td>
+            <td>{{ d.sunlight }}</td>
+            <td>{{ d.cloud|round(1) }}</td>
+            <td class="safety-{{ d.safety|lower|replace(' ', '-') }}">
+                {% if d.safety == 'Safe' %}
+                    <i class="fas fa-check-circle"></i> Safe
+                {% elif d.safety == 'Caution' %}
+                    <i class="fas fa-exclamation-circle"></i> Caution
+                {% else %}
+                    <i class="fas fa-times-circle"></i> {{ d.safety }}
+                {% endif %}
+            </td>
+            <td>{{ d.risks }}</td>
+            <td class="advice">{{ d.advice }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+
+    {% if data.alerts %}
+    <div class="hourly-alerts-card">
+        <h2><i class="fas fa-bell" style="color:#d84315;"></i> Hourly Alerts</h2>
+        <ul class="alert-list">
+        {% for a in data.alerts %}
+            <li class="alert-item"><i class="fas fa-exclamation-triangle" style="color:#d84315;"></i> {{ a[0] }} - {{ a[1] }}</li>
+        {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+</div>
+</body>
+</html>

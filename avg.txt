@@ -1,0 +1,6 @@
+Nitrogen: 18.49
+Phosphorous: 18.37
+Potassium: 3.98
+Ph: 5.71
+Zn: 1.90
+S: 12.21

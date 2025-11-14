@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fertilizer & Pesticide Suggestions</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f0f4f7, #e0f7e9);
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 800px;
+      margin: 50px auto;
+      background: #fff;
+      padding: 30px 40px;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #2e7d32;
+      margin-bottom: 25px;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 8px;
+      color: #333;
+    }
+    textarea {
+      width: 100%;
+      height: 100px;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      resize: none;
+      font-size: 15px;
+      outline: none;
+      transition: border 0.2s;
+    }
+    textarea:focus {
+      border: 1px solid #4caf50;
+    }
+    button {
+      margin-top: 15px;
+      width: 100%;
+      padding: 14px;
+      background: #4caf50;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s;
+    }
+    button:hover {
+      background: #2e7d32;
+      transform: translateY(-2px);
+    }
+    .result {
+      margin-top: 30px;
+    }
+    .box {
+      background: #f9f9f9;
+      padding: 20px;
+      margin: 15px 0;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .box:hover {
+      transform: scale(1.02);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    }
+    h2 {
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #eee;
+    }
+    .disease h2 {
+      color: #d32f2f;
+      border-color: #ffcdd2;
+    }
+    .deficiency h2 {
+      color: #1565c0;
+      border-color: #bbdefb;
+    }
+    ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+    li {
+      margin-bottom: 8px;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    b {
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🌱 Fertilizer & Pesticide Suggestions</h1>
+
+    <form method="POST">
+      <label>Enter observed symptoms (comma-separated):</label>
+      <textarea name="symptoms">{{ ", ".join(symptoms) if symptoms else "" }}</textarea>
+      <button type="submit">🔍 Get Suggestions</button>
+    </form>
+
+    {% if recs %}
+      <div class="result">
+        {% if recs.diseases %}
+          <div class="box disease">
+            <h2>🦠 Disease Treatment</h2>
+            <ul>
+            {% for d in recs.diseases %}
+              <li><b>{{ d.name }}</b> (evidence: {{ d.evidence }}) → {{ d.recommendation }}</li>
+            {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+
+        {% if recs.deficiencies %}
+          <div class="box deficiency">
+            <h2>🌾 Nutrient Deficiency Fix</h2>
+            <ul>
+            {% for d in recs.deficiencies %}
+              <li><b>{{ d.name }}</b> (evidence: {{ d.evidence }}) → {{ d.recommendation }}</li>
+            {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</body>
+</html>

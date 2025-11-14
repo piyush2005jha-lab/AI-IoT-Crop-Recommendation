@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manual Crop Prediction</title>
+    <style>
+        body { font-family: Arial; background: #f5f5f5; padding: 50px; }
+        .container { background: #fff; padding: 30px 40px; border-radius: 10px; box-shadow: 0px 0px 10px #ccc; max-width: 650px; margin: auto; }
+        h1 { text-align: center; color: #2e7d32; }
+        label { font-weight: bold; display: block; margin-top: 10px; }
+        input[type="text"] { width: 100%; padding: 8px; margin: 5px 0 15px 0; border: 1px solid #ccc; border-radius: 5px; }
+        button { width: 100%; padding: 10px; background-color: #2e7d32; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; margin-top: 10px; }
+        button:hover { background-color: #1b5e20; }
+        .result { text-align: center; margin-top: 20px; font-size: 18px; color: #d84315; font-weight: bold; }
+        table { margin: 20px auto; border-collapse: collapse; width: 80%; }
+        td, th { border: 1px solid #ccc; padding: 8px 12px; text-align: center; }
+        th { background-color: #2e7d32; color: white; }
+        .back { display: block; margin-top: 20px; text-align: center; }
+        .back a { color: #2e7d32; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✍ Manual Crop Input</h1>
+        <form method="POST">
+            <label>Temperature (°C):</label>
+            <input type="text" name="Temparature" required>
+
+            <label>Humidity (%):</label>
+            <input type="text" name="Humidity" required>
+
+            <label>Moisture (%):</label>
+            <input type="text" name="Moisture" required>
+
+            <label>Nitrogen (N):</label>
+            <input type="text" name="Nitrogen" required>
+
+            <label>Phosphorous (P):</label>
+            <input type="text" name="Phosphorous" required>
+
+            <label>Potassium (K):</label>
+            <input type="text" name="Potassium" required>
+
+            <label>Soil pH:</label>
+            <input type="text" name="Ph" required>
+
+            <label>Zinc (Zn):</label>
+            <input type="text" name="Zn" required>
+
+            <label>Sulphur (S):</label>
+            <input type="text" name="S" required>
+
+            <label>Rainfall (mm):</label>
+            <input type="text" name="Rainfall" required>
+
+            <label>Wind Speed (km/h):</label>
+            <input type="text" name="Wind Speed" required>
+
+            <label>Cloud Amount (%):</label>
+            <input type="text" name="CLOUD_AMT" required>
+
+            <label>Pressure (PS):</label>
+            <input type="text" name="PS" required>
+
+            <button type="submit">🌱 Predict Crop</button>
+        </form>
+
+        {% if crops %}
+            <div class="result">✅ Top 2 Recommended Crops: {{ crops | join(', ') }}</div>
+        {% endif %}
+
+        <div class="back">
+            <a href="/">⬅ Back to Dashboard</a>
+        </div>
+    </div>
+</body>
+</html>

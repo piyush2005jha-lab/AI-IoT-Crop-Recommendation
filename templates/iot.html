@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>IoT Sensor Output</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #e8f5e9;
+        margin: 0;
+        padding: 20px;
+      }
+      h1 {
+        text-align: center;
+        color: #2e7d32;
+      }
+      .container {
+        max-width: 700px;
+        margin: auto;
+        background: white;
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+      }
+      th {
+        background-color: #a5d6a7;
+        color: #1b5e20;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>IoT Sensor Output</h1>
+    <div class="container">
+      <table id="sensor-table">
+        <thead>
+          <tr>
+            <th>Sensor</th>
+            <th>Value</th>
+            <th>Timestamp</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td colspan="3">Loading data...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <script>
+      function fetchData() {
+        fetch("/iot_data", { cache: "no-store" }) // prevent caching
+          .then((res) => res.json())
+          .then((data) => {
+            let tbody = document.querySelector("#sensor-table tbody");
+            tbody.innerHTML = "";
+
+            if (data.length > 0) {
+              data.forEach((item) => {
+                let row = `<tr>
+            <td>${item.Sensor}</td>
+            <td>${item.Value} ${item.Unit}</td>
+            <td>${item.Timestamp}</td>
+          </tr>`;
+                tbody.innerHTML += row;
+              });
+            } else {
+              tbody.innerHTML =
+                "<tr><td colspan='3'>No sensor data yet</td></tr>";
+            }
+          })
+          .catch((err) => console.error("Error fetching IoT data:", err));
+      }
+
+      setInterval(fetchData, 5000); // refresh every 2 seconds
+      fetchData(); // load immediately
+    </script>
+  </body>
+</html>

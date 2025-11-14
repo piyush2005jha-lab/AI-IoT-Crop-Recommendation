@@ -1,0 +1,10 @@
+__pycache__/
+*.pkl
+*.csv
+*.xlsx
+*.zip
+*.rar
+*.h5
+*.pt
+*.pyc
+*.pyo
