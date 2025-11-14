@@ -55,7 +55,8 @@ HTML
 CSS
 Bootstrap
 
-📁 Project Structure
+## 📁 Project Structure
+
 AI-IoT-Crop-Recommendation/
 │
 ├── app.py
@@ -67,20 +68,23 @@ AI-IoT-Crop-Recommendation/
 ├── avg.txt
 │
 ├── static/
-│   └── images/
+│ └── images/
 │
 ├── templates/
-│   ├── index.html
-│   ├── crop.html
-│   ├── fertilizer.html
-│   ├── recommend_crop.html
-│   ├── weather.html
-│   ├── market.html
-│   ├── iot.html
-│   └── manual.html
+│ ├── index.html
+│ ├── crop.html
+│ ├── fertilizer.html
+│ ├── recommend_crop.html
+│ ├── weather.html
+│ ├── market.html
+│ ├── iot.html
+│ └── manual.html
 │
 └── iot_device/
-    └── sensor_code.py
+└── sensor_code.py
+
+
+
 
 📊 How the ML Model Works
 
