@@ -56,7 +56,7 @@ CSS
 Bootstrap
 
 ## 📁 Project Structure
-
+```
 AI-IoT-Crop-Recommendation/
 │
 ├── app.py
@@ -82,7 +82,7 @@ AI-IoT-Crop-Recommendation/
 │
 └── iot_device/
 └── sensor_code.py
-
+```
 
 
 
